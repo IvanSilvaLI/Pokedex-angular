@@ -1,18 +1,31 @@
 <div class="bg-light-purple p-3 d-flex align-items-center justify-content-center" style="min-height: 100vh;">
-<div *ngIf="pokemon" class="card">
-  <div class="container max-w-500 bg-light rounded p-4">
-  <img [src]="pokemon.sprites.front_default" alt="{{pokemon.name}}" class="card-img-top" />
-  <div class="card-body">
-    <h2 class="card-title">{{pokemon.name}}</h2>
-    <p class="card-text">Tipo: {{getType()}}</p>
-    <p class="card-text">HP: {{getHp()}}</p>
-    <p class="card-text">Altura: {{pokemon.height}} m</p>
-    <p class="card-text">Peso: {{pokemon.weight}} kg</p>
-    <div class="btn-group">
-      <button class="btn btn-primary" (click)="previousPokemon()">Anterior</button>
-      <button class="btn btn-primary" (click)="nextPokemon()">Próximo</button>
-    </div>
+<div class="container max-w-500 bg-light rounded ">
+  <div class="row">
+    <div class="col-12">
+      <h1 class="text-center mb-3">{{ pokemon?.name | titlecase }} Nº({{pokemon?.id}})</h1>
     </div>
   </div>
 
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-md-6">
+      <div class="card">
+        <img [src]="getImg()" class="card-img-top" alt="{{ pokemon?.name }}">
+        <div class="card-body">
+          <p class="card-text"><strong>Altura:</strong> {{  formatHeight(pokemon?.height) }}</p>
+          <p class="card-text"><strong>Peso:</strong> {{  formatWeight(pokemon?.weight) }}</p>
+          <p class="card-text"><strong>Tipo:</strong> {{ pokemon?.types[0]?.type?.name}}</p>
+          <p class="card-text"><strong>HP: </strong>{{ pokemon?.stats[0]?.base_stat }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container mt-3 mb-3">
+    <div class="d-flex justify-content-center align-items-center">
+      <button class="btn btn-primary mx-1" (click)="prevPokemon()">Anterior</button>
+      <button class="btn btn-warning mx-1" (click)="randomPokemon()">Aleatório</button>
+      <button class="btn btn-primary mx-1" (click)="nextPokemon()">Próximo</button>
+    </div>
+  </div>
+  </div>
 </div>

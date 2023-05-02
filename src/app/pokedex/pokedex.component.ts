@@ -7,49 +7,49 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./pokedex.component.css']
 })
 export class PokedexComponent implements OnInit {
+
   pokemon: any;
   pokemonId: number = 1;
-
 
   constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
-    this.loadPokemon();
+    this.getPokemon(this.pokemonId);
   }
 
-
-
-  loadPokemon(): void {
-    this.http.get(`https://pokeapi.co/api/v2/pokemon/${this.pokemonId}`).subscribe(
-      (response) => {
-        this.pokemon = response;
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
+  getPokemon(id: number) {
+    this.http.get(`https://pokeapi.co/api/v2/pokemon/${id}`).subscribe((response: any) => {
+      this.pokemon = response;
+      console.log(this.pokemon);
+    });
   }
 
-  nextPokemon(): void {
-    this.pokemonId++;
-    this.loadPokemon();
+  formatHeight(height: number): string {
+    return `${(height / 10).toFixed(1)} m`;
   }
 
-  previousPokemon(): void {
-    if (this.pokemonId > 1) {
-      this.pokemonId--;
-      this.loadPokemon();
+  formatWeight(weight: number): string {
+    return `${(weight / 10).toFixed(1)} kg`;
+  }
+
+  getImg(): string { return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${this.pokemonId}.png` }
+
+  nextPokemon() {
+    this.pokemonId++; if (this.pokemonId > 1008)
+    { this.pokemonId = 1; }
+      this.getPokemon(this.pokemonId);
     }
+
+
+  prevPokemon() {
+    this.pokemonId--; if (this.pokemonId <= 0)
+    { this.pokemonId = 1008; }
+      this.getPokemon(this.pokemonId);
+    }
+
+
+  randomPokemon() {
+    this.pokemonId = Math.floor(Math.random() * 1008) + 1;
+    this.getPokemon(this.pokemonId);
   }
-
-  getHp(): number {
-    return this.pokemon.stats.find((stat: { stat: { name: string; }; }) => stat.stat.name === 'hp').base_stat;
-  }
-
-  getType(): string {
-    return this.pokemon.types[0].type.name;
-  }
-
-
-
 }
