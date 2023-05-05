@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { PokedexService } from '../pokedex.service';
 
 @Component({
   selector: 'app-pokedex',
@@ -10,19 +10,14 @@ export class PokedexComponent implements OnInit {
 
   pokemon: any;
   pokemonId: number = 1;
+  pokemonTypes: string[] = [];
+  errorMessage: string = '';
 
-  constructor(private http: HttpClient) { }
+  constructor(private pokedexService: PokedexService) { }
 
-  ngOnInit(): void {
-    this.getPokemon(this.pokemonId);
-  }
+  ngOnInit(): void { this.getPokemon(); }
 
-  getPokemon(id: number) {
-    this.http.get(`https://pokeapi.co/api/v2/pokemon/${id}`).subscribe((response: any) => {
-      this.pokemon = response;
-      console.log(this.pokemon);
-    });
-  }
+  getPokemon(): void { this.pokedexService.getPokemon(this.pokemonId) .subscribe( pokemon => { this.pokemon = pokemon; this.pokemonTypes = pokemon.types.map((type: any) => type.type.name); }, error => this.errorMessage = error.message ); }
 
   formatHeight(height: number): string {
     return `${(height / 10).toFixed(1)} m`;
@@ -37,19 +32,19 @@ export class PokedexComponent implements OnInit {
   nextPokemon() {
     this.pokemonId++; if (this.pokemonId > 1008)
     { this.pokemonId = 1; }
-      this.getPokemon(this.pokemonId);
+      this.getPokemon();
     }
 
 
   prevPokemon() {
     this.pokemonId--; if (this.pokemonId <= 0)
     { this.pokemonId = 1008; }
-      this.getPokemon(this.pokemonId);
+      this.getPokemon();
     }
 
 
   randomPokemon() {
     this.pokemonId = Math.floor(Math.random() * 1008) + 1;
-    this.getPokemon(this.pokemonId);
+    this.getPokemon();
   }
 }
